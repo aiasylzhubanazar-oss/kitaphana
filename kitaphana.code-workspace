@@ -1,0 +1,114 @@
+{
+  "folders": [
+    {
+      "name": "🐍 Backend (Developer 1)",
+      "path": "./backend"
+    },
+    {
+      "name": "🎨 Frontend (Developer 2)",
+      "path": "./frontend"
+    },
+    {
+      "name": "📋 Docs & Config",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "editor.fontSize": 14,
+    "editor.tabSize": 4,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": null,
+    "[python]": {
+      "editor.defaultFormatter": "ms-python.black-formatter",
+      "editor.tabSize": 4
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.tabSize": 2
+    },
+    "[html]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.tabSize": 2
+    },
+    "[css]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.tabSize": 2
+    },
+    "files.exclude": {
+      "**/__pycache__": true,
+      "**/*.pyc": true,
+      "**/venv": true,
+      "**/node_modules": true
+    },
+    "python.defaultInterpreterPath": "./backend/venv/bin/python",
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "liveServer.settings.port": 3000,
+    "liveServer.settings.root": "/frontend",
+    "workbench.colorTheme": "Default Dark Modern",
+    "terminal.integrated.fontSize": 13
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-python.python",
+      "ms-python.black-formatter",
+      "esbenp.prettier-vscode",
+      "ritwickdey.LiveServer",
+      "rangav.vscode-thunder-client",
+      "eamodio.gitlens",
+      "usernamehw.errorlens",
+      "streetsidesoftware.code-spell-checker",
+      "PKief.material-icon-theme",
+      "ms-python.pylint"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "🚀 FastAPI Backend",
+        "type": "python",
+        "request": "launch",
+        "program": "${workspaceFolder:🐍 Backend (Developer 1)}/main.py",
+        "console": "integratedTerminal",
+        "env": {
+          "PYTHONPATH": "${workspaceFolder:🐍 Backend (Developer 1)}"
+        }
+      },
+      {
+        "name": "🌐 Frontend Live Server",
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder:🎨 Frontend (Developer 2)}",
+        "runtimeExecutable": "npx",
+        "runtimeArgs": ["live-server", "--port=3000"]
+      }
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Install Backend Dependencies",
+        "type": "shell",
+        "command": "cd backend && pip install -r requirements.txt",
+        "group": "build",
+        "presentation": { "reveal": "always" }
+      },
+      {
+        "label": "Run Backend Server",
+        "type": "shell",
+        "command": "cd backend && python main.py",
+        "group": "build",
+        "isBackground": true,
+        "presentation": { "panel": "dedicated" }
+      },
+      {
+        "label": "Seed Database",
+        "type": "shell",
+        "command": "cd backend && python seed.py",
+        "group": "build"
+      }
+    ]
+  }
+}

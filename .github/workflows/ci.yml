@@ -1,0 +1,74 @@
+# GitHub Actions CI/CD
+# Автоматты тестілеу — Push немесе Pull Request кезінде іске қосылады
+
+name: 🧪 Тесттер & CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+
+  # ── Backend тесттері ─────────────────────────────────────
+  backend-tests:
+    name: 🐍 Python Backend Тесттері
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Кодты жүктеу
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python 3.11 орнату
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: 📦 Тәуелділіктерді орнату
+        run: |
+          cd backend
+          pip install -r requirements.txt
+
+      - name: 🧪 Pytest іске қосу
+        run: |
+          cd backend
+          pytest tests/ -v --tb=short
+
+      - name: 📊 Coverage есебі
+        run: |
+          cd backend
+          pip install pytest-cov
+          pytest tests/ --cov=app --cov-report=term-missing
+
+  # ── Frontend тексеру ─────────────────────────────────────
+  frontend-check:
+    name: 🌐 Frontend Тексеру
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Кодты жүктеу
+        uses: actions/checkout@v4
+
+      - name: ✅ HTML файлдар бар ма тексеру
+        run: |
+          test -f frontend/public/index.html && echo "✅ index.html бар" || exit 1
+          test -f frontend/src/styles/main.css && echo "✅ main.css бар" || exit 1
+          test -f frontend/src/utils/api.js && echo "✅ api.js бар" || exit 1
+
+  # ── Docker build тексеру ─────────────────────────────────
+  docker-check:
+    name: 🐳 Docker Build
+    runs-on: ubuntu-latest
+    needs: [backend-tests]
+
+    steps:
+      - name: 📥 Кодты жүктеу
+        uses: actions/checkout@v4
+
+      - name: 🐳 Docker Compose build
+        run: docker-compose build --no-cache
+
+      - name: ✅ Build сәтті аяқталды
+        run: echo "🎉 Барлық тесттер өтті!"

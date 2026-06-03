@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📚 Кітапхана — Қазақша онлайн кітапхана</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../src/styles/main.css" />
+
+  <style>
+    /* ─── NAV ─────────────────────────────────────────── */
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,13,13,0.92);
+      backdrop-filter: blur(12px);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px; font-weight: 700;
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--cream);
+    }
+    .nav-logo span { color: var(--gold); font-style: italic; }
+    .nav-links { display: flex; gap: 1.75rem; }
+    .nav-link {
+      font-size: 13px; font-weight: 400;
+      color: var(--cream-dim); cursor: pointer;
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-link:hover, .nav-link.active { color: var(--cream); }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+
+    /* ─── HERO ────────────────────────────────────────── */
+    .hero { padding: 4.5rem 2rem 3rem; position: relative; overflow: hidden; }
+    .hero-grain {
+      position: absolute; inset: 0; pointer-events: none; opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gold);
+      background: var(--gold-dim); border: 1px solid var(--gold-border);
+      padding: 5px 14px; border-radius: 2px; margin-bottom: 1.5rem;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 52px; font-weight: 700; line-height: 1.08;
+      color: var(--cream); margin-bottom: 1rem;
+    }
+    .hero-title em { font-style: italic; color: var(--gold); }
+    .hero-desc {
+      font-size: 15px; color: var(--cream-dim); font-weight: 300;
+      line-height: 1.65; max-width: 400px; margin-bottom: 2rem;
+    }
+
+    /* ─── SEARCH ──────────────────────────────────────── */
+    .search-bar {
+      display: flex; align-items: center;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gold-border);
+      border-radius: 4px; padding: 0 16px;
+      max-width: 440px; gap: 10px; margin-bottom: 2rem;
+      transition: border-color 0.2s;
+    }
+    .search-bar:focus-within { border-color: rgba(200,169,110,0.6); }
+    .search-bar i { color: rgba(245,240,232,0.25); font-size: 15px; }
+    .search-bar input {
+      background: transparent; border: none; outline: none;
+      padding: 13px 0; color: var(--cream);
+      font-family: 'DM Sans', sans-serif; font-size: 14px; width: 100%;
+    }
+    .search-bar input::placeholder { color: rgba(245,240,232,0.28); }
+
+    /* ─── STATS ───────────────────────────────────────── */
+    .stats { display: flex; gap: 0; margin-bottom: 2.5rem; max-width: 380px; }
+    .stat { flex: 1; padding: 0 1.25rem; }
+    .stat:first-child { padding-left: 0; }
+    .stat + .stat { border-left: 1px solid rgba(255,255,255,0.07); }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--gold); }
+    .stat-label { font-size: 11px; color: var(--cream-dim); font-weight: 300; text-transform: uppercase; letter-spacing: 0.08em; }
+
+    /* ─── BOOKSHELF ───────────────────────────────────── */
+    .bookshelf {
+      display: flex; gap: 10px; align-items: flex-end;
+      padding: 1.5rem 0 0; margin-bottom: 2.5rem; position: relative;
+    }
+    .bookshelf::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 2px; background: linear-gradient(90deg, var(--gold) 0%, rgba(200,169,110,0.1) 100%);
+    }
+    .book {
+      border-radius: 3px 4px 4px 3px; cursor: pointer; position: relative;
+      display: flex; align-items: flex-end; justify-content: center;
+      padding: 8px 5px 10px;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); flex-shrink: 0;
+    }
+    .book:hover { transform: translateY(-12px); }
+    .book-spine {
+      font-family: 'Playfair Display', serif; font-size: 9.5px;
+      writing-mode: vertical-rl; transform: rotate(180deg);
+      color: rgba(255,255,255,0.75); line-height: 1; white-space: nowrap; overflow: hidden;
+    }
+    .book-badge {
+      position: absolute; top: -8px; right: -6px;
+      background: var(--gold); color: #0D0D0D;
+      font-size: 8px; font-weight: 700; padding: 2px 5px;
+      border-radius: 2px; text-transform: uppercase;
+    }
+
+    /* ─── GENRES ──────────────────────────────────────── */
+    .genres { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 2.5rem; }
+    .genre-tag {
+      font-size: 12px; font-weight: 400; color: var(--cream-dim);
+      background: var(--cream-faint); border: 1px solid rgba(255,255,255,0.07);
+      padding: 5px 14px; border-radius: 20px; cursor: pointer; transition: all 0.2s;
+    }
+    .genre-tag:hover, .genre-tag.active {
+      color: var(--gold); border-color: var(--gold-border); background: var(--gold-dim);
+    }
+
+    /* ─── CARDS GRID ──────────────────────────────────── */
+    .section-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 1.25rem; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; }
+    .section-sub { font-size: 12px; color: var(--cream-dim); font-weight: 300; }
+    .section-more { margin-left: auto; font-size: 12px; color: var(--gold); cursor: pointer; }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px; margin-bottom: 2.5rem; }
+    .book-card { background: var(--bg3); border: 1px solid rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden; cursor: pointer; transition: all 0.25s; }
+    .book-card:hover { border-color: var(--gold-border); transform: translateY(-3px); }
+    .card-cover { height: 120px; display: flex; align-items: center; justify-content: center; }
+    .card-cover-title { font-family: 'Playfair Display', serif; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.85); text-align: center; padding: 0 8px; line-height: 1.3; }
+    .card-body { padding: 10px 10px 12px; }
+    .card-title { font-size: 12px; font-weight: 500; color: var(--cream); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-author { font-size: 11px; color: var(--cream-dim); font-weight: 300; }
+    .card-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+    .card-rating { font-size: 11px; color: var(--gold); display: flex; align-items: center; gap: 3px; }
+    .card-pages { font-size: 10px; color: rgba(245,240,232,0.25); }
+
+    /* ─── PROGRESS ────────────────────────────────────── */
+    .progress-section {
+      background: var(--bg3); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px; padding: 1.25rem; margin-bottom: 2.5rem;
+    }
+    .progress-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.1rem; }
+    .progress-books { display: flex; flex-direction: column; gap: 12px; }
+    .progress-item { display: flex; align-items: center; gap: 12px; }
+    .progress-cover { width: 36px; height: 48px; border-radius: 3px; flex-shrink: 0; }
+    .progress-info { flex: 1; min-width: 0; }
+    .progress-title { font-size: 13px; font-weight: 500; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .progress-author { font-size: 11px; color: var(--cream-dim); margin-bottom: 7px; }
+    .progress-bar { height: 3px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.5s ease; }
+    .progress-pct { font-size: 11px; color: var(--gold); flex-shrink: 0; }
+
+    /* ─── FEATURES ────────────────────────────────────── */
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 2.5rem; }
+    .feature { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 5px; padding: 1rem; }
+    .feature i { font-size: 18px; color: var(--gold); margin-bottom: 8px; display: block; }
+    .feature-title { font-size: 12px; font-weight: 500; margin-bottom: 4px; }
+    .feature-desc { font-size: 11px; color: rgba(245,240,232,0.38); line-height: 1.5; }
+
+    /* ─── BOTTOM NAV ──────────────────────────────────── */
+    .bottom-nav {
+      display: flex; justify-content: space-around;
+      padding: 0.85rem 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      background: rgba(13,13,13,0.95);
+      position: sticky; bottom: 0; z-index: 50;
+    }
+    .bottom-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; opacity: 0.45; transition: opacity 0.2s; }
+    .bottom-item.active { opacity: 1; }
+    .bottom-item i { font-size: 20px; color: var(--cream); }
+    .bottom-item span { font-size: 10px; color: var(--cream-dim); }
+    .bottom-item.active i { color: var(--gold); }
+    .bottom-item.active span { color: var(--gold); }
+
+    /* ─── MODAL ───────────────────────────────────────── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.8); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center; padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--bg2); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; padding: 2rem; width: 100%; max-width: 420px;
+      animation: fadeUp 0.3s ease;
+    }
+    .modal-title { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 1.5rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-label { font-size: 12px; color: var(--cream-dim); margin-bottom: 6px; display: block; }
+    .form-error { font-size: 12px; color: var(--red); margin-top: 4px; display: none; }
+    .modal-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 1.5rem; }
+    .modal-switch { font-size: 12px; color: var(--cream-dim); cursor: pointer; }
+    .modal-switch span { color: var(--gold); }
+    .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--cream-dim); cursor: pointer; font-size: 20px; }
+
+    /* API status banner */
+    .api-banner {
+      background: rgba(200,169,110,0.08); border: 1px solid var(--gold-border);
+      border-radius: 4px; padding: 10px 16px; margin: 0 2rem 1rem;
+      display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--cream-dim);
+    }
+    .api-dot { width: 8px; height: 8px; border-radius: 50%; background: #7EC957; flex-shrink: 0; }
+    .api-dot.offline { background: var(--red); }
+  </style>
+</head>
+
+<body>
+
+<!-- ═══ NAVBAR ════════════════════════════════════════════ -->
+<nav class="nav">
+  <a class="nav-logo" href="#">📚 Кіта<span>пхана</span></a>
+  <div class="nav-links">
+    <a class="nav-link active" href="#">Басты</a>
+    <a class="nav-link" href="#catalog">Каталог</a>
+    <a class="nav-link" href="#about">Туралы</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn btn-ghost" id="btn-login">Кіру</button>
+    <button class="btn btn-gold" id="btn-register">Тіркелу</button>
+  </div>
+</nav>
+
+<!-- ═══ API STATUS ════════════════════════════════════════ -->
+<div class="api-banner" id="api-banner">
+  <div class="api-dot" id="api-dot"></div>
+  <span id="api-status">Backend қосылымы тексерілуде...</span>
+  <span style="margin-left:auto;color:var(--gold);font-size:11px;">http://localhost:8000</span>
+</div>
+
+<!-- ═══ HERO ══════════════════════════════════════════════ -->
+<section class="hero fade-up">
+  <div class="hero-grain"></div>
+  <div class="hero-eyebrow">
+    <div style="width:24px;height:1.5px;background:var(--gold);"></div>
+    Қазақша цифрлық кітапхана
+    <div style="width:24px;height:1.5px;background:var(--gold);"></div>
+  </div>
+  <h1 class="hero-title">
+    Оқы, <em>үйрен,</em><br />дамы.
+  </h1>
+  <p class="hero-desc">
+    Қазақ классикасынан заманауи шығармаларға дейін — барлығы бір платформада.
+    Оқу барысыңды бақыла, достарыңмен бөліс.
+  </p>
+
+  <!-- Search -->
+  <div class="search-bar">
+    <i class="ti ti-search"></i>
+    <input type="text" id="search-input" placeholder="Кітап немесе автор іздеу..." />
+  </div>
+
+  <!-- Stats -->
+  <div class="stats" id="stats">
+    <div class="stat">
+      <div class="stat-num" id="stat-books">—</div>
+      <div class="stat-label">Кітап</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">8</div>
+      <div class="stat-label">Жанр</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Мүмкіндік</div>
+    </div>
+  </div>
+
+  <!-- Bookshelf (static decoration) -->
+  <div class="bookshelf" id="bookshelf">
+    <div class="book" style="background:#4A2F1A;width:42px;height:138px;" data-title="Абай жолы">
+      <span class="book-badge">№1</span>
+      <div class="book-spine">Абай жолы</div>
+    </div>
+    <div class="book" style="background:#1C3A4E;width:36px;height:115px;" data-title="Ботагөз">
+      <div class="book-spine">Ботагөз</div>
+    </div>
+    <div class="book" style="background:#2E1A4E;width:40px;height:148px;opacity:0.9;" data-title="Дала уілі">
+      <div class="book-spine">Дала уілі</div>
+    </div>
+    <div class="book" style="background:#1A3D2A;width:38px;height:105px;opacity:0.8;" data-title="Қан мен тер">
+      <div class="book-spine">Қан мен тер</div>
+    </div>
+    <div class="book" style="background:#4A1E1A;width:44px;height:130px;opacity:0.75;" data-title="Атамекен">
+      <div class="book-spine">Атамекен</div>
+    </div>
+    <div class="book" style="background:#3A3A1A;width:35px;height:98px;opacity:0.6;" data-title="Жайық">
+      <div class="book-spine">Жайық</div>
+    </div>
+    <div class="book" style="background:#1A2A4A;width:39px;height:122px;opacity:0.5;" data-title="Алдаркөсе">
+      <div class="book-spine">Алдаркөсе</div>
+    </div>
+  </div>
+</section>
+
+<div style="padding: 0 2rem;" id="catalog">
+
+  <!-- ═══ GENRES ══════════════════════════════════════════ -->
+  <div class="genres" id="genres">
+    <span class="genre-tag active" data-genre="">Барлығы</span>
+    <span class="genre-tag" data-genre="Қазақ әдебиеті">Қазақ әдебиеті</span>
+    <span class="genre-tag" data-genre="Тарих">Тарих</span>
+    <span class="genre-tag" data-genre="Философия">Философия</span>
+    <span class="genre-tag" data-genre="Фольклор">Фольклор</span>
+    <span class="genre-tag" data-genre="Детектив">Детектив</span>
+  </div>
+
+  <!-- ═══ BOOK CARDS ═══════════════════════════════════════ -->
+  <div class="section-header">
+    <h2 class="section-title">Танымал кітаптар</h2>
+    <span class="section-sub" id="books-count">— жүктелуде</span>
+    <span class="section-more" onclick="loadBooks()">Жаңарту ↻</span>
+  </div>
+  <div class="cards" id="books-grid">
+    <!-- JavaScript арқылы толтырылады -->
+    <div class="loading"><div class="spinner"></div>Жүктелуде...</div>
+  </div>
+
+  <!-- ═══ READING PROGRESS ══════════════════════════════════ -->
+  <div class="progress-section" id="progress-section" style="display:none;">
+    <div class="progress-header">
+      <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:600;">Оқу барысым</span>
+      <span style="font-size:12px;color:var(--gold);cursor:pointer;" id="progress-user-name"></span>
+    </div>
+    <div class="progress-books" id="progress-list">
+      <!-- Барыс элементтері осында -->
+    </div>
+  </div>
+
+  <!-- ═══ FEATURES ════════════════════════════════════════ -->
+  <div class="features">
+    <div class="feature">
+      <i class="ti ti-device-mobile-reading"></i>
+      <div class="feature-title">Кез келген құрылғы</div>
+      <div class="feature-desc">Телефон, планшет, ноутбук</div>
+    </div>
+    <div class="feature">
+      <i class="ti ti-bookmark"></i>
+      <div class="feature-title">Белгі & жазба</div>
+      <div class="feature-desc">Маңызды беттерді сақта</div>
+    </div>
+    <div class="feature">
+      <i class="ti ti-users"></i>
+      <div class="feature-title">Оқу топтары</div>
+      <div class="feature-desc">Достарыңмен бірге оқы</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BOTTOM NAV ══════════════════════════════════════════ -->
+<nav class="bottom-nav">
+  <div class="bottom-item active" data-section="home">
+    <i class="ti ti-home"></i><span>Басты</span>
+  </div>
+  <div class="bottom-item" data-section="catalog">
+    <i class="ti ti-books"></i><span>Каталог</span>
+  </div>
+  <div class="bottom-item" data-section="saved">
+    <i class="ti ti-bookmark"></i><span>Сақталған</span>
+  </div>
+  <div class="bottom-item" data-section="profile">
+    <i class="ti ti-user"></i><span>Профиль</span>
+  </div>
+</nav>
+
+<!-- ═══ TOAST NOTIFICATION ════════════════════════════════ -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══ AUTH MODAL ════════════════════════════════════════ -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal" style="position:relative;">
+    <button class="modal-close" onclick="closeModal()">
+      <i class="ti ti-x"></i>
+    </button>
+
+    <!-- Login Form -->
+    <div id="login-form">
+      <h2 class="modal-title">Кіру</h2>
+      <div class="form-group">
+        <label class="form-label">Пайдаланушы аты</label>
+        <input class="input" id="login-username" type="text" placeholder="username" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Пароль</label>
+        <input class="input" id="login-password" type="password" placeholder="••••••••" />
+        <div class="form-error" id="login-error">Пайдаланушы аты немесе пароль қате</div>
+      </div>
+      <div class="modal-footer">
+        <span class="modal-switch" onclick="switchForm('register')">
+          Аккаунт жоқ па? <span>Тіркелу</span>
+        </span>
+        <button class="btn btn-gold" onclick="doLogin()">Кіру</button>
+      </div>
+    </div>
+
+    <!-- Register Form -->
+    <div id="register-form" style="display:none;">
+      <h2 class="modal-title">Тіркелу</h2>
+      <div class="form-group">
+        <label class="form-label">Толық аты</label>
+        <input class="input" id="reg-fullname" type="text" placeholder="Аты-жөніңіз" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Пайдаланушы аты</label>
+        <input class="input" id="reg-username" type="text" placeholder="username" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="input" id="reg-email" type="email" placeholder="email@example.com" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Пароль</label>
+        <input class="input" id="reg-password" type="password" placeholder="Кемінде 6 таңба" />
+        <div class="form-error" id="reg-error">Тіркелу қатесі</div>
+      </div>
+      <div class="modal-footer">
+        <span class="modal-switch" onclick="switchForm('login')">
+          Аккаунт бар ма? <span>Кіру</span>
+        </span>
+        <button class="btn btn-gold" onclick="doRegister()">Тіркелу</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ JAVASCRIPT ════════════════════════════════════════ -->
+<script type="module">
+  const API = "http://localhost:8000/api";
+
+  // ─── State ─────────────────────────────────────────────
+  let currentUser = JSON.parse(localStorage.getItem("kitaphana_user") || "null");
+  let allBooks = [];
+
+  // ─── API helpers ───────────────────────────────────────
+  async function apiFetch(path, opts = {}) {
+    try {
+      const r = await fetch(API + path, {
+        headers: { "Content-Type": "application/json" },
+        ...opts,
+      });
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(err.detail || `HTTP ${r.status}`);
+      }
+      if (r.status === 204) return null;
+      return r.json();
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  // ─── Toast ─────────────────────────────────────────────
+  window.showToast = function(msg, type = "") {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.className = `toast ${type} show`;
+    setTimeout(() => t.classList.remove("show"), 3000);
+  };
+
+  // ─── API status check ──────────────────────────────────
+  async function checkApi() {
+    try {
+      await fetch("http://localhost:8000/health");
+      document.getElementById("api-dot").classList.remove("offline");
+      document.getElementById("api-status").textContent = "Backend қосылды ✓ — API жұмыс жасап тұр";
+    } catch {
+      document.getElementById("api-dot").classList.add("offline");
+      document.getElementById("api-status").textContent = "Backend қосылмаған — demo режімінде жұмыс жасайды";
+      loadDemoBooks();
+    }
+  }
+
+  // ─── Load books from API ───────────────────────────────
+  window.loadBooks = async function(genre = "") {
+    const grid = document.getElementById("books-grid");
+    grid.innerHTML = '<div class="loading"><div class="spinner"></div>Жүктелуде...</div>';
+
+    try {
+      const url = genre ? `/books?genre=${encodeURIComponent(genre)}` : "/books";
+      allBooks = await apiFetch(url);
+      renderBooks(allBooks);
+
+      // Stats
+      document.getElementById("stat-books").textContent = allBooks.length + "+";
+      document.getElementById("books-count").textContent = `— ${allBooks.length} кітап`;
+    } catch {
+      loadDemoBooks();
+    }
+  };
+
+  function loadDemoBooks() {
+    allBooks = [
+      { id: 1, title: "Абай жолы", author: "М. Әуезов", rating: 4.9, pages: 873, cover_color: "#3A2010", genre: "Қазақ әдебиеті" },
+      { id: 2, title: "Ботагөз", author: "С. Сейфуллин", rating: 4.7, pages: 412, cover_color: "#10283A", genre: "Тарих" },
+      { id: 3, title: "Дала уілі", author: "Б. Майлин", rating: 4.6, pages: 298, cover_color: "#1C1030", genre: "Қазақ әдебиеті" },
+      { id: 4, title: "Қан мен тер", author: "А. Нұрпейісов", rating: 4.8, pages: 556, cover_color: "#103020", genre: "Қазақ әдебиеті" },
+      { id: 5, title: "Атамекен", author: "Ғ. Мүсірепов", rating: 4.5, pages: 185, cover_color: "#4A1E1A", genre: "Қазақ әдебиеті" },
+      { id: 6, title: "Жайық", author: "Х. Есенжанов", rating: 4.3, pages: 342, cover_color: "#3A3A1A", genre: "Тарих" },
+      { id: 7, title: "Алдаркөсе", author: "Халық ертегілері", rating: 4.4, pages: 220, cover_color: "#1A2A4A", genre: "Фольклор" },
+      { id: 8, title: "Тар жол", author: "С. Сейфуллин", rating: 4.7, pages: 508, cover_color: "#2A1A1A", genre: "Тарих" },
+    ];
+    renderBooks(allBooks);
+    document.getElementById("stat-books").textContent = "500+";
+    document.getElementById("books-count").textContent = `— demo деректер`;
+  }
+
+  function renderBooks(books) {
+    const grid = document.getElementById("books-grid");
+    if (!books.length) {
+      grid.innerHTML = '<div class="loading">Кітап табылмады 📭</div>';
+      return;
+    }
+    grid.innerHTML = books.map(b => `
+      <div class="book-card" onclick="openBook(${b.id})">
+        <div class="card-cover" style="background:${b.cover_color || '#3A2010'};">
+          <div class="card-cover-title">${b.title}</div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">${b.title}</div>
+          <div class="card-author">${b.author}</div>
+          <div class="card-meta">
+            <div class="card-rating"><i class="ti ti-star-filled" style="font-size:10px;"></i>${b.rating}</div>
+            <div class="card-pages">${b.pages} бет</div>
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  // ─── Search ────────────────────────────────────────────
+  const searchInput = document.getElementById("search-input");
+  let searchTimer;
+  searchInput.addEventListener("input", e => {
+    clearTimeout(searchTimer);
+    const q = e.target.value.trim();
+    if (!q) { renderBooks(allBooks); return; }
+    searchTimer = setTimeout(async () => {
+      try {
+        const results = await apiFetch(`/books/search?q=${encodeURIComponent(q)}`);
+        renderBooks(results);
+        document.getElementById("books-count").textContent = `— ${results.length} нәтиже`;
+      } catch {
+        const filtered = allBooks.filter(b =>
+          b.title.toLowerCase().includes(q.toLowerCase()) ||
+          b.author.toLowerCase().includes(q.toLowerCase())
+        );
+        renderBooks(filtered);
+      }
+    }, 400);
+  });
+
+  // ─── Genre filter ──────────────────────────────────────
+  document.querySelectorAll(".genre-tag").forEach(tag => {
+    tag.addEventListener("click", function () {
+      document.querySelectorAll(".genre-tag").forEach(t => t.classList.remove("active"));
+      this.classList.add("active");
+      const genre = this.dataset.genre;
+      loadBooks(genre);
+    });
+  });
+
+  // ─── Open book ─────────────────────────────────────────
+  window.openBook = function(id) {
+    const book = allBooks.find(b => b.id === id);
+    if (!book) return;
+    showToast(`📖 "${book.title}" — оқылуда...`);
+    if (currentUser) {
+      updateProgress(currentUser.user_id, id, 5);
+    }
+  };
+
+  async function updateProgress(userId, bookId, pct) {
+    try {
+      await apiFetch(`/progress/${userId}/${bookId}`, {
+        method: "PUT",
+        body: JSON.stringify({ progress_pct: pct, current_page: 1 }),
+      });
+      loadProgress();
+    } catch {}
+  }
+
+  // ─── Load progress ─────────────────────────────────────
+  async function loadProgress() {
+    if (!currentUser) return;
+    try {
+      const items = await apiFetch(`/progress/${currentUser.user_id}`);
+      if (!items.length) return;
+
+      const section = document.getElementById("progress-section");
+      section.style.display = "block";
+      document.getElementById("progress-user-name").textContent = currentUser.username + " →";
+
+      document.getElementById("progress-list").innerHTML = items.slice(0, 3).map(p => `
+        <div class="progress-item">
+          <div class="progress-cover" style="background:${p.book?.cover_color || '#3A2010'};"></div>
+          <div class="progress-info">
+            <div class="progress-title">${p.book?.title || "Белгісіз"}</div>
+            <div class="progress-author">${p.book?.author || ""}</div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:${p.progress_pct}%;"></div>
+            </div>
+          </div>
+          <div class="progress-pct">${p.progress_pct}%</div>
+        </div>
+      `).join("");
+    } catch {}
+  }
+
+  // ─── Auth ───────────────────────────────────────────────
+  document.getElementById("btn-login").onclick = () => {
+    if (currentUser) { logout(); return; }
+    openModal("login");
+  };
+  document.getElementById("btn-register").onclick = () => openModal("register");
+
+  window.openModal = function(mode) {
+    document.getElementById("auth-modal").classList.add("open");
+    switchForm(mode);
+  };
+  window.closeModal = function() {
+    document.getElementById("auth-modal").classList.remove("open");
+  };
+  window.switchForm = function(mode) {
+    document.getElementById("login-form").style.display = mode === "login" ? "block" : "none";
+    document.getElementById("register-form").style.display = mode === "register" ? "block" : "none";
+  };
+
+  window.doLogin = async function() {
+    const username = document.getElementById("login-username").value.trim();
+    const password = document.getElementById("login-password").value;
+    const errEl = document.getElementById("login-error");
+
+    try {
+      const data = await apiFetch("/users/login", {
+        method: "POST",
+        body: JSON.stringify({ username, password }),
+      });
+      currentUser = data;
+      localStorage.setItem("kitaphana_user", JSON.stringify(data));
+      closeModal();
+      updateAuthUI();
+      showToast(`Қош келдіңіз, ${data.username}! 👋`, "success");
+      loadProgress();
+    } catch (e) {
+      errEl.style.display = "block";
+      errEl.textContent = e.message;
+    }
+  };
+
+  window.doRegister = async function() {
+    const errEl = document.getElementById("reg-error");
+    try {
+      const data = await apiFetch("/users/register", {
+        method: "POST",
+        body: JSON.stringify({
+          username: document.getElementById("reg-username").value.trim(),
+          email: document.getElementById("reg-email").value.trim(),
+          password: document.getElementById("reg-password").value,
+          full_name: document.getElementById("reg-fullname").value.trim(),
+        }),
+      });
+      showToast("Тіркелу сәтті! Енді кіріңіз.", "success");
+      switchForm("login");
+    } catch (e) {
+      errEl.style.display = "block";
+      errEl.textContent = e.message;
+    }
+  };
+
+  function logout() {
+    localStorage.removeItem("kitaphana_user");
+    currentUser = null;
+    document.getElementById("progress-section").style.display = "none";
+    updateAuthUI();
+    showToast("Шықтыңыз 👋");
+  }
+
+  function updateAuthUI() {
+    const loginBtn = document.getElementById("btn-login");
+    const regBtn = document.getElementById("btn-register");
+    if (currentUser) {
+      loginBtn.textContent = "Шығу";
+      loginBtn.className = "btn btn-ghost";
+      regBtn.textContent = currentUser.username;
+      regBtn.className = "btn btn-gold";
+    } else {
+      loginBtn.textContent = "Кіру";
+      regBtn.textContent = "Тіркелу";
+      regBtn.className = "btn btn-gold";
+    }
+  }
+
+  // ─── Bottom nav ─────────────────────────────────────────
+  document.querySelectorAll(".bottom-item").forEach(item => {
+    item.addEventListener("click", function () {
+      document.querySelectorAll(".bottom-item").forEach(i => i.classList.remove("active"));
+      this.classList.add("active");
+    });
+  });
+
+  // ─── Init ───────────────────────────────────────────────
+  checkApi();
+  loadBooks();
+  if (currentUser) { updateAuthUI(); loadProgress(); }
+</script>
+
+</body>
+</html>

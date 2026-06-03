@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KitapHana — Онлайн Кітапхана</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/tabler-icons.min.css" />
+  <link rel="stylesheet" href="../static/css/style.css" />
+</head>
+<body>
+
+<div class="lib" id="app">
+
+  <!-- ─── NAV ─────────────────────────────── -->
+  <header class="nav">
+    <div class="nav-logo">
+      <i class="ti ti-books" aria-hidden="true"></i>
+      Kitap<span>Hana</span>
+    </div>
+    <nav class="nav-links" aria-label="Негізгі навигация">
+      <a class="nav-link active" href="#home">Басты</a>
+      <a class="nav-link" href="#catalog">Каталог</a>
+      <a class="nav-link" href="#about">Туралы</a>
+    </nav>
+    <div class="nav-right">
+      <button class="btn-ghost" id="btn-login" aria-label="Кіру">Кіру</button>
+      <button class="btn-gold" id="btn-register" aria-label="Тіркелу">Тіркелу</button>
+    </div>
+  </header>
+
+  <!-- ─── HERO ─────────────────────────────── -->
+  <section class="hero" id="home">
+    <div class="hero-grain" aria-hidden="true"></div>
+    <div class="hero-eyebrow">
+      <div class="hero-divider" aria-hidden="true"></div>
+      Қазақша кітапхана
+      <div class="hero-divider" aria-hidden="true"></div>
+    </div>
+    <h1 class="hero-title">
+      Оқы, дам,<br /><em>өс</em>
+    </h1>
+    <p class="hero-desc">
+      Мыңдаған қазақ және әлем кітаптары бір платформада.
+      Тегін тіркел, оқи бастай бер.
+    </p>
+
+    <!-- Search -->
+    <div class="search-bar" role="search">
+      <i class="ti ti-search" aria-hidden="true"></i>
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Кітап, автор немесе жанр іздеу..."
+        aria-label="Кітап іздеу"
+        autocomplete="off"
+      />
+      <button class="search-filter" id="search-btn" aria-label="Іздеу">Іздеу</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats" aria-label="Статистика">
+      <div class="stat">
+        <div class="stat-num" id="stat-books">—</div>
+        <div class="stat-label">Кітап</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">12</div>
+        <div class="stat-label">Тіл</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">Free</div>
+        <div class="stat-label">Тіркелу</div>
+      </div>
+    </div>
+
+    <!-- Bookshelf -->
+    <div class="bookshelf" id="bookshelf" aria-label="Кітап сөресі" role="list"></div>
+  </section>
+
+  <div class="main-content">
+
+    <!-- ─── GENRE TAGS ────────────────────── -->
+    <div class="genres" id="genres" role="list" aria-label="Жанрлар"></div>
+
+    <!-- ─── SEARCH RESULTS (hidden by default) ── -->
+    <div id="search-results-section" style="display:none;">
+      <div class="section-header">
+        <h2 class="section-title">Іздеу нәтижелері</h2>
+        <span class="section-sub" id="search-count"></span>
+        <button class="section-more" id="clear-search">✕ Жабу</button>
+      </div>
+      <div class="cards" id="search-results"></div>
+    </div>
+
+    <!-- ─── POPULAR BOOKS ─────────────────── -->
+    <div id="main-sections">
+      <div class="section-header">
+        <h2 class="section-title">Танымал кітаптар</h2>
+        <span class="section-sub">— осы аптада</span>
+        <button class="section-more" id="show-all-btn" aria-label="Барлығын көру">
+          Барлығы <i class="ti ti-arrow-right" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="cards" id="books-grid">
+        <!-- JS арқылы толтырылады -->
+        <div class="card-skeleton"></div>
+        <div class="card-skeleton"></div>
+        <div class="card-skeleton"></div>
+        <div class="card-skeleton"></div>
+      </div>
+
+      <!-- ─── READING PROGRESS ────────────── -->
+      <div class="progress-section" id="progress-section">
+        <div class="progress-header">
+          <span class="progress-title-main">Оқу барысы</span>
+          <button class="section-more">Кітапхана ↗</button>
+        </div>
+        <div class="progress-books" id="progress-list">
+          <!-- JS арқылы толтырылады -->
+        </div>
+      </div>
+
+      <!-- ─── BANNER ─────────────────────── -->
+      <div class="banner" role="complementary">
+        <i class="ti ti-certificate banner-icon" aria-hidden="true"></i>
+        <div>
+          <div class="banner-title">Оқырман сертификаты</div>
+          <div class="banner-desc">Айына 4 кітап оқып, ресми сертификат алыңыз</div>
+        </div>
+        <button class="banner-btn" id="cert-btn">Бастау</button>
+      </div>
+
+      <!-- ─── FEATURES ──────────────────── -->
+      <div class="features" aria-label="Мүмкіндіктер">
+        <div class="feature">
+          <i class="ti ti-device-mobile-reading" aria-hidden="true"></i>
+          <div class="feature-title">Кез келген құрылғы</div>
+          <div class="feature-desc">Телефон, планшет, ноутбук — барлығында синхрон</div>
+        </div>
+        <div class="feature">
+          <i class="ti ti-bookmark" aria-hidden="true"></i>
+          <div class="feature-title">Белгі & жазба</div>
+          <div class="feature-desc">Маңызды беттерді сақта, ескертпе жаз</div>
+        </div>
+        <div class="feature">
+          <i class="ti ti-users" aria-hidden="true"></i>
+          <div class="feature-title">Оқу топтары</div>
+          <div class="feature-desc">Достарыңмен бірге оқы, пікір бөліс</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ─── BOTTOM NAV ─────────────────────── -->
+  <nav class="bottom-nav" aria-label="Төменгі навигация">
+    <button class="bottom-item active" data-page="home" aria-label="Басты бет">
+      <i class="ti ti-home" aria-hidden="true"></i>
+      <span>Басты</span>
+    </button>
+    <button class="bottom-item" data-page="catalog" aria-label="Каталог">
+      <i class="ti ti-books" aria-hidden="true"></i>
+      <span>Каталог</span>
+    </button>
+    <button class="bottom-item" data-page="saved" aria-label="Сақталған">
+      <i class="ti ti-bookmark" aria-hidden="true"></i>
+      <span>Сақталған</span>
+    </button>
+    <button class="bottom-item" data-page="achievements" aria-label="Жетістіктер">
+      <i class="ti ti-trophy" aria-hidden="true"></i>
+      <span>Жетістік</span>
+    </button>
+    <button class="bottom-item" data-page="profile" aria-label="Профиль">
+      <i class="ti ti-user" aria-hidden="true"></i>
+      <span>Профиль</span>
+    </button>
+  </nav>
+
+  <!-- ─── MODAL: Book Detail ────────────── -->
+  <div class="modal-overlay" id="book-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+    <div class="modal">
+      <button class="modal-close" id="modal-close" aria-label="Жабу">✕</button>
+      <div class="modal-cover" id="modal-cover"></div>
+      <div class="modal-body">
+        <h2 class="modal-title" id="modal-title"></h2>
+        <p class="modal-author" id="modal-author"></p>
+        <div class="modal-meta" id="modal-meta"></div>
+        <p class="modal-desc" id="modal-desc"></p>
+        <div class="modal-actions">
+          <button class="btn-gold modal-btn-read">Оқи бастау</button>
+          <button class="btn-ghost modal-btn-save">
+            <i class="ti ti-bookmark"></i> Сақтау
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TOAST ─────────────────────────── -->
+  <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+</div>
+
+<script src="../static/js/app.js"></script>
+</body>
+</html>
