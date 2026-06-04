@@ -1,0 +1,42 @@
+version: "3.9"
+
+# Кітапхана — Docker Compose
+# Іске қосу: docker-compose up --build
+
+services:
+
+  # ── Backend (Python FastAPI) ──────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: kitaphana-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app          # Hot reload үшін
+      - db-data:/app/data       # Дерекқор деректері
+    environment:
+      - PYTHONPATH=/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Frontend (Static HTML/JS) ──────────────────────────
+  frontend:
+    image: nginx:alpine
+    container_name: kitaphana-frontend
+    ports:
+      - "3000:80"
+    volumes:
+      - ./frontend/public:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  db-data:
+    driver: local

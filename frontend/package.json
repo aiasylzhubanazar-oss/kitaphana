@@ -1,0 +1,17 @@
+{
+  "name": "kitaphana-frontend",
+  "version": "1.0.0",
+  "description": "Қазақша онлайн кітапхана — Frontend",
+  "scripts": {
+    "dev": "npx serve public -p 3000",
+    "build": "echo 'Static site — no build needed'",
+    "lint": "echo 'No linter configured yet'"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

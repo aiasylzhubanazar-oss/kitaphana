@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>📚 Кітапхана</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--gold:#C8A96E;--gold-dim:rgba(200,169,110,.15);--gold-border:rgba(200,169,110,.3);--bg:#0D0D0D;--bg2:#111;--bg3:#161616;--cream:#F5F0E8;--cream-dim:rgba(245,240,232,.5);--green:#7EC957;--red:#E05252;--blue:#5B8DEF}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--cream);min-height:100vh}
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.06);position:sticky;top:0;z-index:100;background:rgba(13,13,13,.95);backdrop-filter:blur(12px)}
+.logo{font-family:'Playfair Display',serif;font-size:20px;font-weight:700}
+.logo em{font-style:italic;color:var(--gold)}
+.nav-right{display:flex;gap:8px;align-items:center}
+.btn{padding:7px 18px;border-radius:3px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;transition:.2s;display:inline-flex;align-items:center;gap:5px}
+.btn-gold{background:var(--gold);color:#0D0D0D}
+.btn-ghost{background:transparent;color:var(--cream-dim);border:1px solid rgba(255,255,255,.12)}
+.btn-ghost:hover{color:var(--cream);border-color:rgba(255,255,255,.25)}
+.btn-red{background:var(--red);color:#fff}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-sm{padding:5px 12px;font-size:12px}
+/* ROLE BADGE */
+.role-badge{font-size:11px;padding:3px 10px;border-radius:10px;font-weight:500}
+.role-writer{background:rgba(91,141,239,.15);color:var(--blue);border:1px solid rgba(91,141,239,.3)}
+.role-reader{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold-border)}
+/* HERO */
+.hero{padding:3rem 1.5rem 2rem}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);background:var(--gold-dim);border:1px solid var(--gold-border);padding:4px 12px;border-radius:2px;margin-bottom:1.2rem}
+.hero h1{font-family:'Playfair Display',serif;font-size:40px;font-weight:700;line-height:1.1;margin-bottom:.8rem}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero p{font-size:14px;color:var(--cream-dim);line-height:1.65;max-width:380px;margin-bottom:1.5rem}
+/* SEARCH + FILTER */
+.search-filter{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
+.search-wrap{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border:1px solid var(--gold-border);border-radius:4px;padding:0 12px;flex:1;min-width:200px}
+.search-wrap input{background:transparent;border:none;outline:none;padding:11px 0;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:14px;width:100%}
+.search-wrap input::placeholder{color:rgba(245,240,232,.28)}
+.filter-select{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:0 12px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;height:44px;min-width:140px}
+.filter-select option{background:#1a1a1a}
+/* STATS */
+.stats{display:flex;gap:0;margin-bottom:2rem}
+.stat{flex:1;padding:0 1rem}
+.stat:first-child{padding-left:0}
+.stat+.stat{border-left:1px solid rgba(255,255,255,.07)}
+.stat-num{font-family:'Playfair Display',serif;font-size:24px;color:var(--gold)}
+.stat-lbl{font-size:11px;color:var(--cream-dim);text-transform:uppercase;letter-spacing:.08em}
+/* SHELF */
+.shelf{display:flex;gap:8px;align-items:flex-end;margin-bottom:2rem;border-bottom:2px solid var(--gold-border);padding-bottom:0}
+.spine{border-radius:3px 4px 4px 3px;cursor:pointer;display:flex;align-items:flex-end;justify-content:center;padding:8px 5px 10px;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.spine:hover{transform:translateY(-14px)}
+.spine-txt{font-family:'Playfair Display',serif;font-size:9px;writing-mode:vertical-rl;transform:rotate(180deg);color:rgba(255,255,255,.75);white-space:nowrap;overflow:hidden}
+/* GENRES */
+.genres{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:2rem}
+.gtag{font-size:12px;color:var(--cream-dim);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);padding:5px 13px;border-radius:20px;cursor:pointer;transition:.2s}
+.gtag:hover,.gtag.active{color:var(--gold);border-color:var(--gold-border);background:var(--gold-dim)}
+/* SECTION */
+.sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:1.1rem}
+.sec-hdr h2{font-family:'Playfair Display',serif;font-size:20px}
+.sec-hdr span{font-size:12px;color:var(--cream-dim)}
+.sec-hdr .more{margin-left:auto;font-size:12px;color:var(--gold);cursor:pointer}
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-bottom:2.5rem}
+.bcard{background:var(--bg3);border:1px solid rgba(255,255,255,.05);border-radius:5px;overflow:hidden;cursor:pointer;transition:.22s;position:relative}
+.bcard:hover{border-color:var(--gold-border);transform:translateY(-3px)}
+.bcover{height:115px;display:flex;align-items:center;justify-content:center;padding:8px}
+.bcover-txt{font-family:'Playfair Display',serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.85);text-align:center;line-height:1.3}
+.bbody{padding:9px 9px 11px}
+.btitle{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.bauthor{font-size:11px;color:var(--cream-dim);font-weight:300}
+.bmeta{display:flex;justify-content:space-between;margin-top:7px}
+.brating{font-size:11px;color:var(--gold)}
+.bpages{font-size:10px;color:rgba(245,240,232,.25)}
+.edit-badge{position:absolute;top:6px;right:6px;background:var(--blue);color:#fff;font-size:9px;padding:2px 6px;border-radius:2px;font-weight:600}
+/* MODALS */
+.overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.85);backdrop-filter:blur(5px);align-items:center;justify-content:center;padding:1rem}
+.overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:1.75rem;width:100%;max-width:420px;animation:fadeUp .3s ease;position:relative;max-height:90vh;overflow-y:auto}
+.modal h2{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:1.4rem}
+.fgrp{margin-bottom:.9rem}
+.flbl{font-size:12px;color:var(--cream-dim);margin-bottom:5px;display:block}
+.finput{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:10px 13px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:14px}
+.finput:focus{outline:none;border-color:var(--gold-border)}
+.finput::placeholder{color:rgba(245,240,232,.28)}
+select.finput option{background:#1a1a1a}
+.ferr{font-size:12px;color:var(--red);margin-top:4px;display:none}
+.mfooter{display:flex;align-items:center;justify-content:space-between;margin-top:1.4rem;gap:8px}
+.mclose{position:absolute;top:.9rem;right:.9rem;background:none;border:none;color:var(--cream-dim);cursor:pointer;font-size:22px;line-height:1}
+/* ROLE SELECT */
+.role-select{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.2rem}
+.role-card{border:2px solid rgba(255,255,255,.08);border-radius:6px;padding:1.2rem;cursor:pointer;transition:.2s;text-align:center}
+.role-card:hover{border-color:rgba(255,255,255,.2)}
+.role-card.selected-writer{border-color:var(--blue);background:rgba(91,141,239,.08)}
+.role-card.selected-reader{border-color:var(--gold);background:var(--gold-dim)}
+.role-card .role-icon{font-size:28px;margin-bottom:8px}
+.role-card .role-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;margin-bottom:4px}
+.role-card .role-desc{font-size:11px;color:var(--cream-dim);line-height:1.4}
+/* BOOK DETAIL */
+.detail{display:none;position:fixed;inset:0;z-index:150;background:rgba(0,0,0,.85);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;padding:1rem}
+.detail.open{display:flex}
+.detail-card{background:var(--bg2);border:1px solid rgba(255,255,255,.1);border-radius:10px 10px 0 0;width:100%;max-width:480px;padding:1.5rem;animation:slideUp .3s ease}
+.detail-top{display:flex;gap:14px;margin-bottom:1.2rem}
+.detail-cover{width:70px;height:95px;border-radius:4px;flex-shrink:0}
+.detail-info h3{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:4px}
+.detail-author{font-size:13px;color:var(--cream-dim);margin-bottom:8px}
+.detail-tags{display:flex;gap:6px;flex-wrap:wrap}
+.dtag{font-size:11px;color:var(--gold);background:var(--gold-dim);border:1px solid var(--gold-border);padding:2px 9px;border-radius:10px}
+.detail-desc{font-size:13px;color:var(--cream-dim);line-height:1.65;margin-bottom:1.2rem}
+.detail-actions{display:flex;gap:8px;flex-wrap:wrap}
+/* BOTTOM NAV */
+.bnav{display:flex;justify-content:space-around;padding:.8rem 0;border-top:1px solid rgba(255,255,255,.06);background:rgba(13,13,13,.95);position:sticky;bottom:0}
+.bitem{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;opacity:.4;transition:.2s}
+.bitem.active{opacity:1}
+.bicon{font-size:22px}
+.bitem.active .bicon,.bitem.active .blbl{color:var(--gold)}
+.blbl{font-size:10px;color:var(--cream-dim)}
+/* ADD/EDIT BOOK */
+.add-section{background:var(--bg3);border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:1.25rem;margin:0 1.5rem 2rem}
+.add-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+/* PROFILE */
+.profile-card{background:var(--bg3);border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:1.5rem;margin:0 1.5rem 1.5rem;text-align:center}
+.profile-avatar{width:64px;height:64px;border-radius:50%;background:var(--gold-dim);border:2px solid var(--gold-border);margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:24px;color:var(--gold)}
+.profile-name{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:6px}
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--bg3);border:1px solid var(--gold-border);color:var(--cream);padding:9px 18px;border-radius:4px;font-size:13px;opacity:0;transition:.3s;z-index:999;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:rgba(126,201,87,.4);color:var(--green)}
+.toast.err{border-color:rgba(224,82,82,.4);color:var(--red)}
+/* NO ACCESS */
+.no-access{text-align:center;padding:3rem 1.5rem;color:var(--cream-dim)}
+.no-access .icon{font-size:48px;margin-bottom:1rem}
+.loading{display:flex;align-items:center;justify-content:center;padding:3rem;gap:10px;color:var(--cream-dim);font-size:14px}
+.spin{width:18px;height:18px;border:2px solid rgba(200,169,110,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(60px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="logo">📚 Кіта<em>пхана</em></div>
+  <div class="nav-right" id="nav-right">
+    <button class="btn btn-ghost" onclick="openModal('login')">Кіру</button>
+    <button class="btn btn-gold" onclick="openModal('register')">Тіркелу</button>
+  </div>
+</nav>
+
+<!-- PAGE: HOME -->
+<div id="page-home">
+  <section class="hero">
+    <div class="eyebrow">📖 Қазақша цифрлық кітапхана</div>
+    <h1>Оқы, <em>үйрен,</em><br/>дамы.</h1>
+    <p>Қазақ классикасынан заманауи шығармаларға дейін — барлығы бір платформада.</p>
+    <div class="search-filter">
+      <div class="search-wrap">
+        <span>🔍</span>
+        <input id="search" type="text" placeholder="Кітап немесе автор іздеу..."/>
+      </div>
+      <select class="filter-select" id="genre-filter" onchange="filterByGenre()">
+        <option value="">Барлық жанр</option>
+        <option value="Қазақ әдебиеті">Қазақ әдебиеті</option>
+        <option value="Тарих">Тарих</option>
+        <option value="Фольклор">Фольклор</option>
+        <option value="Философия">Философия</option>
+        <option value="Детектив">Детектив</option>
+        <option value="Ғылым">Ғылым</option>
+      </select>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-num" id="scount">—</div><div class="stat-lbl">Кітап</div></div>
+      <div class="stat"><div class="stat-num" id="sgenre">—</div><div class="stat-lbl">Жанр</div></div>
+      <div class="stat"><div class="stat-num">∞</div><div class="stat-lbl">Мүмкіндік</div></div>
+    </div>
+    <div class="shelf" id="shelf"></div>
+  </section>
+
+  <div style="padding:0 1.5rem">
+    <div class="genres" id="genres">
+      <span class="gtag active" data-g="" onclick="filterGenreTag(this,'')">Барлығы</span>
+    </div>
+    <div class="sec-hdr">
+      <h2>Кітаптар</h2>
+      <span id="gcount"></span>
+      <span class="more" onclick="loadBooks()">↻</span>
+    </div>
+    <div class="grid" id="grid"><div class="loading"><div class="spin"></div>Жүктелуде...</div></div>
+  </div>
+</div>
+
+<!-- PAGE: ADD BOOK (тек Жазушы) -->
+<div id="page-add" style="display:none">
+  <div style="padding:2rem 1.5rem 1rem">
+    <h2 style="font-family:'Playfair Display',serif;font-size:24px;margin-bottom:.4rem" id="add-page-title">Кітап қосу</h2>
+    <p style="font-size:13px;color:var(--cream-dim)">Каталогқа жаңа кітап қос</p>
+  </div>
+  <div id="add-content"></div>
+</div>
+
+<!-- PAGE: PROFILE -->
+<div id="page-profile" style="display:none">
+  <div style="padding:2rem 1.5rem 1rem">
+    <h2 style="font-family:'Playfair Display',serif;font-size:24px">Профиль</h2>
+  </div>
+  <div id="profile-content"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bnav">
+  <div class="bitem active" onclick="showPage('home')">
+    <div class="bicon">🏠</div><div class="blbl">Басты</div>
+  </div>
+  <div class="bitem" id="bnav-add" onclick="showPage('add')">
+    <div class="bicon">➕</div><div class="blbl">Қосу</div>
+  </div>
+  <div class="bitem" onclick="showPage('profile')">
+    <div class="bicon">👤</div><div class="blbl">Профиль</div>
+  </div>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<!-- BOOK DETAIL -->
+<div class="detail" id="detail" onclick="closeDetail(event)">
+  <div class="detail-card" id="detail-card"></div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="overlay" id="auth-overlay" onclick="closeOverlay(event,'auth-overlay')">
+  <div class="modal">
+    <button class="mclose" onclick="document.getElementById('auth-overlay').classList.remove('open')">✕</button>
+
+    <!-- LOGIN -->
+    <div id="f-login">
+      <h2>Кіру</h2>
+      <div class="fgrp"><label class="flbl">Пайдаланушы аты</label><input class="finput" id="l-user" placeholder="username"/></div>
+      <div class="fgrp"><label class="flbl">Пароль</label><input class="finput" id="l-pass" type="password" placeholder="••••••"/></div>
+      <div class="ferr" id="l-err">Пайдаланушы аты немесе пароль қате</div>
+      <div class="mfooter">
+        <span style="font-size:12px;color:var(--cream-dim);cursor:pointer" onclick="switchAuth('register')">Жоқ па? <span style="color:var(--gold)">Тіркелу</span></span>
+        <button class="btn btn-gold" onclick="doLogin()">Кіру →</button>
+      </div>
+    </div>
+
+    <!-- REGISTER STEP 1: Role select -->
+    <div id="f-role" style="display:none">
+      <h2>Сіз кімсіз?</h2>
+      <p style="font-size:13px;color:var(--cream-dim);margin-bottom:1.2rem">Платформада өз рөліңізді таңдаңыз</p>
+      <div class="role-select">
+        <div class="role-card" id="card-writer" onclick="selectRole('writer')">
+          <div class="role-icon">✍️</div>
+          <div class="role-name">Жазушы</div>
+          <div class="role-desc">Кітап қоса аласыз, өзгерте аласыз, жоя аласыз</div>
+        </div>
+        <div class="role-card" id="card-reader" onclick="selectRole('reader')">
+          <div class="role-icon">📖</div>
+          <div class="role-name">Оқырман</div>
+          <div class="role-desc">Кітаптарды оқи аласыз, сақтай аласыз</div>
+        </div>
+      </div>
+      <div class="ferr" id="role-err">Рөл таңдаңыз</div>
+      <div class="mfooter">
+        <span style="font-size:12px;color:var(--cream-dim);cursor:pointer" onclick="switchAuth('login')">Бар ма? <span style="color:var(--gold)">Кіру</span></span>
+        <button class="btn btn-gold" onclick="goToRegisterForm()">Келесі →</button>
+      </div>
+    </div>
+
+    <!-- REGISTER STEP 2: Form -->
+    <div id="f-register" style="display:none">
+      <h2 id="reg-title">Тіркелу</h2>
+      <div id="role-chosen-badge" style="margin-bottom:1rem"></div>
+      <div class="fgrp"><label class="flbl">Аты-жөні</label><input class="finput" id="r-name" placeholder="Айасыл Жубаназар"/></div>
+      <div class="fgrp"><label class="flbl">Пайдаланушы аты</label><input class="finput" id="r-user" placeholder="aiasyl"/></div>
+      <div class="fgrp"><label class="flbl">Пароль</label><input class="finput" id="r-pass" type="password" placeholder="Кемінде 6 таңба"/></div>
+      <div class="ferr" id="r-err"></div>
+      <div class="mfooter">
+        <button class="btn btn-ghost" onclick="switchAuth('role')">← Артқа</button>
+        <button class="btn btn-gold" onclick="doRegister()">Тіркелу →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT BOOK MODAL -->
+<div class="overlay" id="edit-overlay" onclick="closeOverlay(event,'edit-overlay')">
+  <div class="modal">
+    <button class="mclose" onclick="document.getElementById('edit-overlay').classList.remove('open')">✕</button>
+    <h2 id="edit-modal-title">Кітапты өзгерту</h2>
+    <input type="hidden" id="edit-id"/>
+    <div class="fgrp"><label class="flbl">Кітап атауы</label><input class="finput" id="edit-title"/></div>
+    <div class="fgrp"><label class="flbl">Автор</label><input class="finput" id="edit-author"/></div>
+    <div class="fgrp"><label class="flbl">Жанр</label>
+      <select class="finput" id="edit-genre">
+        <option>Қазақ әдебиеті</option><option>Тарих</option><option>Фольклор</option>
+        <option>Философия</option><option>Детектив</option><option>Ғылым</option><option>Белгісіз</option>
+      </select>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="fgrp"><label class="flbl">Беттер</label><input class="finput" id="edit-pages" type="number"/></div>
+      <div class="fgrp"><label class="flbl">Рейтинг</label><input class="finput" id="edit-rating" type="number" step="0.1" min="0" max="5"/></div>
+    </div>
+    <div class="fgrp"><label class="flbl">Сипаттама</label><textarea class="finput" id="edit-desc" rows="3"></textarea></div>
+    <div class="ferr" id="edit-err"></div>
+    <div style="display:flex;gap:8px;margin-top:1.2rem">
+      <button class="btn btn-gold" onclick="saveEdit()" style="flex:1">💾 Сақтау</button>
+      <button class="btn btn-red" onclick="deleteBook()">🗑 Жою</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = "http://127.0.0.1:8000/api";
+let books = [], user = JSON.parse(localStorage.getItem("kuser")||"null");
+let selectedRole = "";
+let currentFilter = "";
+
+// ── API ────────────────────────────────────────────────────────
+async function api(path, opts={}) {
+  const r = await fetch(API+path,{headers:{"Content-Type":"application/json"},...opts});
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.detail||"Қате")}
+  if(r.status===204)return null;
+  return r.json();
+}
+
+// ── Toast ──────────────────────────────────────────────────────
+function toast(msg,type=""){
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.className=`toast ${type} show`;
+  setTimeout(()=>t.classList.remove("show"),3000);
+}
+
+// ── Pages ──────────────────────────────────────────────────────
+function showPage(p) {
+  ["home","add","profile"].forEach(x=>{
+    document.getElementById("page-"+x).style.display = x===p?"block":"none";
+  });
+  document.querySelectorAll(".bitem").forEach((el,i)=>{
+    el.classList.toggle("active",["home","add","profile"][i]===p);
+  });
+  if(p==="add") renderAddPage();
+  if(p==="profile") renderProfile();
+}
+
+// ── Load Books ─────────────────────────────────────────────────
+async function loadBooks(genre="") {
+  currentFilter = genre;
+  const grid=document.getElementById("grid");
+  grid.innerHTML='<div class="loading"><div class="spin"></div>Жүктелуде...</div>';
+  try {
+    books = await api("/books"+(genre?`?genre=${encodeURIComponent(genre)}`:""));
+    renderGrid(books);
+    document.getElementById("scount").textContent = books.length;
+    document.getElementById("gcount").textContent = `— ${books.length} кітап`;
+    buildShelf();
+    buildGenreTags();
+  } catch {
+    demoBooks();
+    renderGrid(books);
+    buildShelf();
+    buildGenreTags();
+  }
+}
+
+function demoBooks() {
+  books = [
+    {id:1,title:"Абай жолы",author:"М. Әуезов",rating:4.9,pages:873,cover_color:"#4A2F1A",genre:"Қазақ әдебиеті",description:"Абай Құнанбаевтың өмірі туралы роман-эпопея."},
+    {id:2,title:"Ботагөз",author:"С. Сейфуллин",rating:4.7,pages:412,cover_color:"#1C3A4E",genre:"Тарих",description:"Азамат соғысы кезіндегі қазақ халқының өмірі."},
+    {id:3,title:"Қан мен тер",author:"Ә. Нұрпейісов",rating:4.8,pages:556,cover_color:"#1A3D2A",genre:"Қазақ әдебиеті",description:"Арал балықшылары туралы трагедиялық роман."},
+    {id:4,title:"Дала уілі",author:"Б. Майлин",rating:4.6,pages:298,cover_color:"#2E1A4E",genre:"Қазақ әдебиеті",description:"Қазақ даласының өмірін суреттейтін шығарма."},
+    {id:5,title:"Тар жол",author:"С. Сейфуллин",rating:4.7,pages:508,cover_color:"#2A1A1A",genre:"Тарих",description:"Автобиографиялық роман — революция жылдары."},
+    {id:6,title:"Атамекен",author:"Ғ. Мүсірепов",rating:4.5,pages:185,cover_color:"#4A1E1A",genre:"Қазақ әдебиеті",description:"Туған жер сүйіспеншілігі туралы проза."},
+    {id:7,title:"Алдаркөсе",author:"Халық ертегілері",rating:4.4,pages:220,cover_color:"#1A2A4A",genre:"Фольклор",description:"Қазақ халық ертегілерінің жинағы."},
+    {id:8,title:"Шыңырау",author:"Қ. Жұмаділов",rating:4.5,pages:465,cover_color:"#1A3A2A",genre:"Қазақ әдебиеті",description:"Заманауи қазақ прозасының үздік үлгісі."},
+  ];
+  document.getElementById("scount").textContent="500+";
+  document.getElementById("gcount").textContent="— demo режімі";
+}
+
+function renderGrid(list) {
+  const g=document.getElementById("grid");
+  if(!list.length){g.innerHTML='<div class="loading">Кітап табылмады 📭</div>';return;}
+  const isWriter = user && user.role === "writer";
+  g.innerHTML = list.map(b=>`
+    <div class="bcard" onclick="openDetail(${b.id})">
+      ${isWriter?`<div class="edit-badge">✎</div>`:""}
+      <div class="bcover" style="background:${b.cover_color||'#3A2010'}">
+        <div class="bcover-txt">${b.title}</div>
+      </div>
+      <div class="bbody">
+        <div class="btitle">${b.title}</div>
+        <div class="bauthor">${b.author}</div>
+        <div class="bmeta">
+          <span class="brating">★ ${b.rating}</span>
+          <span class="bpages">${b.pages} бет</span>
+        </div>
+      </div>
+    </div>`).join("");
+}
+
+function buildShelf() {
+  document.getElementById("shelf").innerHTML = books.slice(0,7).map(b=>`
+    <div class="spine" style="background:${b.cover_color||'#3A2010'};width:${32+Math.random()*14|0}px;height:${90+Math.random()*60|0}px" onclick="openDetail(${b.id})">
+      <div class="spine-txt">${b.title}</div>
+    </div>`).join("");
+}
+
+function buildGenreTags() {
+  const genres = [...new Set(books.map(b=>b.genre).filter(Boolean))];
+  document.getElementById("sgenre").textContent = genres.length;
+  const wrap = document.getElementById("genres");
+  wrap.innerHTML = `<span class="gtag${!currentFilter?' active':''}" data-g="" onclick="filterGenreTag(this,'')">Барлығы</span>`
+    + genres.map(g=>`<span class="gtag${currentFilter===g?' active':''}" data-g="${g}" onclick="filterGenreTag(this,'${g}')">${g}</span>`).join("");
+}
+
+// ── Filters ────────────────────────────────────────────────────
+function filterByGenre() {
+  const g = document.getElementById("genre-filter").value;
+  loadBooks(g);
+}
+function filterGenreTag(el, g) {
+  document.querySelectorAll(".gtag").forEach(t=>t.classList.remove("active"));
+  el.classList.add("active");
+  currentFilter = g;
+  if(g) renderGrid(books.filter(b=>b.genre===g));
+  else renderGrid(books);
+}
+
+// ── Search ─────────────────────────────────────────────────────
+let st;
+document.getElementById("search").addEventListener("input", e=>{
+  clearTimeout(st);
+  const q=e.target.value.trim();
+  if(!q){renderGrid(books);return;}
+  st=setTimeout(async()=>{
+    try{const r=await api(`/books/search?q=${encodeURIComponent(q)}`);renderGrid(r);}
+    catch{renderGrid(books.filter(b=>b.title.toLowerCase().includes(q.toLowerCase())||b.author.toLowerCase().includes(q.toLowerCase())));}
+  },350);
+});
+
+// ── Book Detail ────────────────────────────────────────────────
+function openDetail(id) {
+  const b=books.find(x=>x.id===id);
+  if(!b) return;
+  const isWriter = user && user.role==="writer";
+  const isLoggedIn = !!user;
+
+  document.getElementById("detail-card").innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:1.2rem">
+      <span style="font-size:12px;color:var(--cream-dim)">Кітап мәліметі</span>
+      <button onclick="closeDetail()" style="background:none;border:none;color:var(--cream-dim);cursor:pointer;font-size:20px">✕</button>
+    </div>
+    <div class="detail-top">
+      <div class="detail-cover" style="background:${b.cover_color||'#3A2010'}"></div>
+      <div class="detail-info">
+        <h3>${b.title}</h3>
+        <div class="detail-author">${b.author}</div>
+        <div class="detail-tags">
+          <span class="dtag">${b.genre}</span>
+          <span class="dtag">★ ${b.rating}</span>
+          <span class="dtag">${b.pages} бет</span>
+        </div>
+      </div>
+    </div>
+    <p class="detail-desc">${b.description||"Сипаттама жоқ."}</p>
+    <div class="detail-actions">
+      ${isLoggedIn
+        ? `<button class="btn btn-gold" style="flex:1" data-id="${b.id}" onclick="window.location.href='reader.html?id='+this.dataset.id">📖 Оқуды бастау</button>`
+        : `<button class="btn btn-ghost" style="flex:1" onclick="closeDetail();openModal('login')">Оқу үшін кіріңіз</button>`
+      }
+      ${isWriter
+        ? `<button class="btn btn-blue btn-sm" onclick="openEdit(${b.id})">✎ Өзгерту</button>`
+        : `<button class="btn btn-ghost btn-sm" onclick="toast('🔖 Сақталды!','ok');closeDetail()">🔖 Сақтау</button>`
+      }
+    </div>`;
+  document.getElementById("detail").classList.add("open");
+}
+function closeDetail(e) {
+  if(!e||e.target===document.getElementById("detail"))
+    document.getElementById("detail").classList.remove("open");
+}
+
+// ── ADD BOOK PAGE ──────────────────────────────────────────────
+function renderAddPage() {
+  const content = document.getElementById("add-content");
+  if(!user) {
+    content.innerHTML=`<div class="no-access"><div class="icon">🔒</div><p>Кітап қосу үшін кіріңіз</p><br/><button class="btn btn-gold" onclick="openModal('login')">Кіру</button></div>`;
+    return;
+  }
+  if(user.role !== "writer") {
+    content.innerHTML=`<div class="no-access"><div class="icon">📖</div><p style="font-size:15px;margin-bottom:.5rem">Сіз — <strong>Оқырман</strong></p><p>Кітап қосу тек <strong>Жазушыларға</strong> қолжетімді.</p><br/><p style="font-size:12px;color:var(--cream-dim)">Жазушы болу үшін жаңа аккаунт ашыңыз.</p></div>`;
+    return;
+  }
+  document.getElementById("add-page-title").textContent = "Кітап қосу ✍️";
+  content.innerHTML=`
+    <div class="add-section">
+      <div class="add-grid">
+        <div class="fgrp" style="grid-column:1/-1"><label class="flbl">Кітап атауы *</label><input class="finput" id="a-title" placeholder="Кітап атауы"/></div>
+        <div class="fgrp" style="grid-column:1/-1"><label class="flbl">Автор *</label><input class="finput" id="a-author" placeholder="Автор аты"/></div>
+        <div class="fgrp"><label class="flbl">Жанр</label>
+          <select class="finput" id="a-genre">
+            <option>Қазақ әдебиеті</option><option>Тарих</option><option>Фольклор</option>
+            <option>Философия</option><option>Детектив</option><option>Ғылым</option><option>Белгісіз</option>
+          </select>
+        </div>
+        <div class="fgrp"><label class="flbl">Беттер саны</label><input class="finput" id="a-pages" type="number" placeholder="300"/></div>
+        <div class="fgrp"><label class="flbl">Рейтинг (0-5)</label><input class="finput" id="a-rating" type="number" step="0.1" min="0" max="5" placeholder="4.5"/></div>
+        <div class="fgrp"><label class="flbl">Жыл</label><input class="finput" id="a-year" type="number" placeholder="2024"/></div>
+        <div class="fgrp" style="grid-column:1/-1"><label class="flbl">Сипаттама</label><textarea class="finput" id="a-desc" rows="3" placeholder="Кітап туралы..."></textarea></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:1rem">
+        <button class="btn btn-gold" onclick="addBook()" style="flex:1">✓ Қосу</button>
+        <button class="btn btn-ghost" onclick="showPage('home')">Болдырмау</button>
+      </div>
+      <div class="ferr" id="add-err" style="margin-top:8px;display:none"></div>
+    </div>`;
+}
+
+async function addBook() {
+  const title=document.getElementById("a-title").value.trim();
+  const author=document.getElementById("a-author").value.trim();
+  const errEl=document.getElementById("add-err");
+  if(!title||!author){errEl.style.display="block";errEl.textContent="Атауы мен автор міндетті!";return;}
+  const colors=["#4A2F1A","#1C3A4E","#2E1A4E","#1A3D2A","#4A1E1A","#1A2A4A","#3A1A3A","#2A1A2A"];
+  const data={
+    title,author,
+    genre:document.getElementById("a-genre").value,
+    pages:parseInt(document.getElementById("a-pages").value)||0,
+    rating:parseFloat(document.getElementById("a-rating").value)||0,
+    published_year:parseInt(document.getElementById("a-year").value)||null,
+    description:document.getElementById("a-desc").value,
+    cover_color:colors[Math.floor(Math.random()*colors.length)],
+  };
+  try {
+    await api("/books",{method:"POST",body:JSON.stringify(data)});
+    toast("✅ Кітап қосылды!","ok");
+    loadBooks(); showPage("home");
+  } catch(e) {errEl.style.display="block";errEl.textContent=e.message;}
+}
+
+// ── EDIT / DELETE BOOK ─────────────────────────────────────────
+function openEdit(id) {
+  const b=books.find(x=>x.id===id);
+  if(!b) return;
+  document.getElementById("edit-id").value = b.id;
+  document.getElementById("edit-title").value = b.title;
+  document.getElementById("edit-author").value = b.author;
+  document.getElementById("edit-genre").value = b.genre;
+  document.getElementById("edit-pages").value = b.pages;
+  document.getElementById("edit-rating").value = b.rating;
+  document.getElementById("edit-desc").value = b.description||"";
+  document.getElementById("edit-modal-title").textContent = `"${b.title}" өзгерту`;
+  document.getElementById("detail").classList.remove("open");
+  document.getElementById("edit-overlay").classList.add("open");
+}
+
+async function saveEdit() {
+  const id=document.getElementById("edit-id").value;
+  const errEl=document.getElementById("edit-err");
+  const data={
+    title:document.getElementById("edit-title").value.trim(),
+    author:document.getElementById("edit-author").value.trim(),
+    genre:document.getElementById("edit-genre").value,
+    pages:parseInt(document.getElementById("edit-pages").value)||0,
+    rating:parseFloat(document.getElementById("edit-rating").value)||0,
+    description:document.getElementById("edit-desc").value,
+  };
+  try {
+    await api(`/books/${id}`,{method:"PUT",body:JSON.stringify(data)});
+    toast("✅ Өзгертулер сақталды!","ok");
+    document.getElementById("edit-overlay").classList.remove("open");
+    loadBooks();
+  } catch(e) {
+    // Demo mode — local update
+    const idx=books.findIndex(b=>b.id==id);
+    if(idx>-1){books[idx]={...books[idx],...data};renderGrid(books);toast("✅ Өзгертілді! (demo)","ok");document.getElementById("edit-overlay").classList.remove("open");}
+    else {errEl.style.display="block";errEl.textContent=e.message;}
+  }
+}
+
+async function deleteBook() {
+  const id=document.getElementById("edit-id").value;
+  if(!confirm("Кітапты жою керек пе?")) return;
+  try {
+    await api(`/books/${id}`,{method:"DELETE"});
+    toast("🗑 Кітап жойылды","ok");
+    document.getElementById("edit-overlay").classList.remove("open");
+    loadBooks();
+  } catch {
+    // Demo mode
+    books=books.filter(b=>b.id!=id);
+    renderGrid(books);
+    toast("🗑 Жойылды! (demo)","ok");
+    document.getElementById("edit-overlay").classList.remove("open");
+  }
+}
+
+// ── AUTH ───────────────────────────────────────────────────────
+function openModal(mode){document.getElementById("auth-overlay").classList.add("open");switchAuth(mode);}
+function closeOverlay(e,id){if(e.target===document.getElementById(id))document.getElementById(id).classList.remove("open");}
+function switchAuth(m){
+  ["f-login","f-role","f-register"].forEach(id=>{document.getElementById(id).style.display="none";});
+  document.getElementById("f-"+m).style.display="block";
+}
+
+function selectRole(role) {
+  selectedRole=role;
+  document.getElementById("card-writer").className="role-card"+(role==="writer"?" selected-writer":"");
+  document.getElementById("card-reader").className="role-card"+(role==="reader"?" selected-reader":"");
+}
+
+function goToRegisterForm() {
+  if(!selectedRole){document.getElementById("role-err").style.display="block";return;}
+  document.getElementById("role-err").style.display="none";
+  document.getElementById("reg-title").textContent = selectedRole==="writer"?"✍️ Жазушы тіркелу":"📖 Оқырман тіркелу";
+  document.getElementById("role-chosen-badge").innerHTML = selectedRole==="writer"
+    ? `<span class="role-badge role-writer">✍️ Жазушы</span>`
+    : `<span class="role-badge role-reader">📖 Оқырман</span>`;
+  switchAuth("register");
+}
+
+function doLogin(){
+  const u=document.getElementById("l-user").value.trim();
+  const p=document.getElementById("l-pass").value;
+  const errEl=document.getElementById("l-err");
+  if(u&&p){
+    // Demo: нақты backend-та JWT болады
+    const saved=JSON.parse(localStorage.getItem("kuser_"+u)||"null");
+    if(saved&&saved.password===p){
+      user={...saved}; delete user.password;
+      localStorage.setItem("kuser",JSON.stringify(user));
+      document.getElementById("auth-overlay").classList.remove("open");
+      updateNav(); toast(`Қош келдіңіз, ${user.full_name}! 👋`,"ok");
+      renderGrid(books);
+    } else {
+      errEl.style.display="block";
+    }
+  } else {
+    errEl.style.display="block";
+  }
+}
+
+function doRegister(){
+  const n=document.getElementById("r-name").value.trim();
+  const u=document.getElementById("r-user").value.trim();
+  const p=document.getElementById("r-pass").value;
+  const errEl=document.getElementById("r-err");
+  if(!n||!u||!p){errEl.style.display="block";errEl.textContent="Барлық өрісті толтырыңыз";return;}
+  if(p.length<6){errEl.style.display="block";errEl.textContent="Пароль кемінде 6 таңба болуы керек";return;}
+  if(localStorage.getItem("kuser_"+u)){errEl.style.display="block";errEl.textContent="Бұл username бұрыннан бар";return;}
+
+  const newUser={username:u,full_name:n,role:selectedRole,password:p};
+  localStorage.setItem("kuser_"+u,JSON.stringify(newUser));
+  user={username:u,full_name:n,role:selectedRole};
+  localStorage.setItem("kuser",JSON.stringify(user));
+  document.getElementById("auth-overlay").classList.remove("open");
+  updateNav();
+  const roleText=selectedRole==="writer"?"✍️ Жазушы ретінде":"📖 Оқырман ретінде";
+  toast(`🎉 Тіркелдіңіз! ${roleText}`,"ok");
+  renderGrid(books);
+}
+
+function logout(){
+  localStorage.removeItem("kuser"); user=null;
+  updateNav(); toast("Шықтыңыз 👋");
+  renderGrid(books);
+}
+
+function updateNav(){
+  const r=document.getElementById("nav-right");
+  if(user){
+    const badge=user.role==="writer"
+      ?`<span class="role-badge role-writer">✍️ Жазушы</span>`
+      :`<span class="role-badge role-reader">📖 Оқырман</span>`;
+    r.innerHTML=`${badge}<span style="font-size:13px;color:var(--cream-dim)">${user.full_name}</span>
+      <button class="btn btn-ghost btn-sm" onclick="logout()">Шығу</button>`;
+    // Жазушыға + батырмасын көрсет
+    document.getElementById("bnav-add").style.opacity = user.role==="writer"?"1":"0.3";
+  } else {
+    r.innerHTML=`<button class="btn btn-ghost" onclick="openModal('login')">Кіру</button>
+      <button class="btn btn-gold" onclick="openModal('register')">Тіркелу</button>`;
+  }
+}
+
+// ── PROFILE ────────────────────────────────────────────────────
+function renderProfile(){
+  const el=document.getElementById("profile-content");
+  if(!user){
+    el.innerHTML=`<div class="no-access"><div class="icon">🔒</div><p>Профильді көру үшін кіріңіз</p><br/><button class="btn btn-gold" onclick="openModal('login')">Кіру</button></div>`;
+    return;
+  }
+  const isWriter=user.role==="writer";
+  el.innerHTML=`
+    <div class="profile-card">
+      <div class="profile-avatar">${(user.full_name||user.username)[0]}</div>
+      <div class="profile-name">${user.full_name}</div>
+      <div style="margin-bottom:8px">@${user.username}</div>
+      ${isWriter
+        ?`<span class="role-badge role-writer">✍️ Жазушы — кітап қоса аласыз</span>`
+        :`<span class="role-badge role-reader">📖 Оқырман — кітап оқи аласыз</span>`}
+    </div>
+    <div style="padding:0 1.5rem">
+      <div style="background:var(--bg3);border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:1.25rem;margin-bottom:1rem">
+        <div style="font-size:13px;color:var(--cream-dim);margin-bottom:1rem">Мүмкіндіктер</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+            <span>${isWriter?'✅':'❌'}</span> Кітап қосу
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+            <span>${isWriter?'✅':'❌'}</span> Кітапты өзгерту / жою
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+            <span>✅</span> Кітап оқу
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+            <span>✅</span> Кітап сақтау
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem">
+        <div style="background:var(--bg3);border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:1rem;text-align:center">
+          <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--gold)">${books.length}</div>
+          <div style="font-size:11px;color:var(--cream-dim)">Қол жетімді</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:1rem;text-align:center">
+          <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--gold)">${isWriter?books.length:0}</div>
+          <div style="font-size:11px;color:var(--cream-dim)">${isWriter?'Қосылған':'Оқылған'}</div>
+        </div>
+      </div>
+      <button class="btn btn-red" onclick="logout()" style="width:100%">Шығу</button>
+    </div>`;
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+updateNav();
+loadBooks();
+</script>
+</body>
+</html>
